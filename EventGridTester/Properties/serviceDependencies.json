@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "identityapp.aad1": {
+      "type": "identityapp.aad",
+      "connectionId": "AzureAD:ClientSecret"
+    },
+    "compute.appService1": {
+      "group": "connections",
+      "type": "compute.appService"
+    }
+  }
+}

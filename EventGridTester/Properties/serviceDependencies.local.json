@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "identityapp.aad1": {
+      "secretStore": "LocalSecretsFile",
+      "type": "identityapp.aad.callsgraph",
+      "connectionId": "AzureAD:ClientSecret"
+    },
+    "compute.appService1": {
+      "group": "connections",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/KFEventGridTester",
+      "type": "compute.appService.windows"
+    }
+  }
+}

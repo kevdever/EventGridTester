@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "1fd0e937-a898-46d2-95a3-5dc3863f7629",
+		"name": "EventGridTester",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test EventGrid webhook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{$guid}}\",\r\n    \"subject\": \"TestSub\",\r\n    \"topic\": \"MyTopic\",\r\n    \"eventType\": \"Something\",\r\n    \"dataVersion\": \"1.0\",\r\n    \"data\":{\r\n        \"myInteger\": \"943\",\r\n        \"someFlag\": \"true\",\r\n        \"messages\":[\r\n            \"hello\",\r\n            \"lorem ipsum\"\r\n        ],\r\n        \"customIdentifier\": \"3.14159265358979\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/EventSubscription",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"EventSubscription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/EventSubscription",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"EventSubscription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish Event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{$guid}}\",\r\n    \"subject\": \"Postman\",\r\n    \"topic\": \"MyTopic\",\r\n    \"eventType\": \"Something\",\r\n    \"dataVersion\": \"1.0\",\r\n    \"data\":{\r\n        \"myInteger\": \"145\",\r\n        \"someFlag\": \"false\",\r\n        \"messages\":[\r\n            \"hello\",\r\n            \"lorem ipsum\",\"this is from postman\"\r\n        ],\r\n        \"customIdentifier\": \"3.14159265358979\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/EventSubscription/publish",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"EventSubscription",
+						"publish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Purge all events",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/EventSubscription",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"EventSubscription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignalR - Test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"{{$guid}}\",\r\n    \"subject\": \"Postman\",\r\n    \"topic\": \"MyTopic\",\r\n    \"eventType\": \"Something\",\r\n    \"dataVersion\": \"1.0\",\r\n    \"data\":{\r\n        \"myInteger\": \"145\",\r\n        \"someFlag\": \"false\",\r\n        \"messages\":[\r\n            \"hello\",\r\n            \"lorem ipsum\",\"this is from postman\"\r\n        ],\r\n        \"customIdentifier\": \"3.14159265358979\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/EventSubscription/signalr",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"EventSubscription",
+						"signalr"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
