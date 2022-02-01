@@ -36,6 +36,8 @@ builder.Services.AddRazorPages()
 builder.Services.Configure<EventGridConfig>(options =>
 {
     options.Uri = builder.Configuration.GetValue<string>("EventGridTopicURI");
+    options.UseKey = builder.Configuration.GetValue<bool>("EventGridUseKey");
+    options.Key = builder.Configuration.GetValue<string>("EventGridKey");
 });
 
 builder.Services.AddSingleton<IEventHistory,EventHistory>();
