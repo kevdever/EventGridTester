@@ -1,4 +1,6 @@
-﻿using Azure.Identity;
+﻿using Azure;
+using Azure.Core;
+using Azure.Identity;
 using Azure.Messaging.EventGrid;
 using EventGridTester.ConfigurationModels;
 using Microsoft.Extensions.Options;
@@ -34,9 +36,20 @@ namespace EventGridTester.Services
 
         private EventGridPublisherClient InitializeClient()
         {
-            EventGridPublisherClient client = new EventGridPublisherClient(
-                _config.ToURI(),
-                new DefaultAzureCredential());
+            EventGridPublisherClient client;
+            if (_config.UseKey.HasValue && _config.UseKey.Value)
+            {
+                client = new EventGridPublisherClient(
+                    _config.ToURI(),
+                    new AzureKeyCredential(_config.Key));
+            }
+            else
+            {
+                client = new EventGridPublisherClient(
+                    _config.ToURI(),
+                    new DefaultAzureCredential());
+            }
+
             return client;
         }
     }
