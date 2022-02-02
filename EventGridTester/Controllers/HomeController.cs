@@ -3,9 +3,8 @@ using EventGridTester.Models;
 using EventGridTester.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace EventGridTester.Controllers
 {
@@ -37,12 +36,21 @@ namespace EventGridTester.Controllers
             EventGridEvent eventGridEvent;
             try
             {
-                var json = JsonConvert.DeserializeObject<JObject>(viewmodel.Json);
-                var subject = json["subject"].Value<string>();
-                var eventType = json["eventType"].Value<string>();
-                var data = json["data"].ToObject<CustomEventModel>();
+                var json = JsonDocument.Parse(viewmodel.Json);
+                var subject = json.RootElement.GetProperty("subject").GetString();
+                var eventType = json.RootElement.GetProperty("eventType").GetString();
+                string dataVersion;
+                if (json.RootElement.TryGetProperty("dataVersion", out var dataVersionJson))
+                {
+                    dataVersion = dataVersionJson.GetString();
+                }
+                else
+                {
+                    dataVersion = "1.0";
+                }
+                var data = json.RootElement.GetProperty("data").Deserialize<dynamic>();
 
-                eventGridEvent = new EventGridEvent(subject, eventType, "1.0", data);
+                eventGridEvent = new EventGridEvent(subject, eventType, dataVersion, data);
             }
             catch (Exception ex)
             {
