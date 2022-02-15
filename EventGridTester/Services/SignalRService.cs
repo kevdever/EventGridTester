@@ -1,6 +1,7 @@
 ﻿using Azure.Messaging.EventGrid;
 using EventGridTester.Models;
 using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 
 namespace EventGridTester.Services
 {
@@ -43,8 +44,8 @@ namespace EventGridTester.Services
         {
             try
             {
-                var customData = CustomEventModel.FromEventData(evt.Data);
-                if (!string.IsNullOrEmpty(customData.CustomIdentifier) && _allowedSubscribers.TryGetValue(customData.CustomIdentifier, out var connections))
+                var data = evt.Data.ToObjectFromJson<JsonDocument>();
+                if ((data?.RootElement.TryGetProperty("customIdentifier", out var customIdentifer) ?? false) && _allowedSubscribers.TryGetValue(customIdentifer.GetString(), out var connections))
                 {
                     var tasks = new List<Task>();
                     foreach (var connectionId in connections.ToList())
@@ -56,7 +57,7 @@ namespace EventGridTester.Services
                             continue;
                         }
                         tasks.Add(_context.Clients.Client(connectionId).SendAsync("ReceiveMessage", evt));
-                        _logger.LogInformation($"[SignalR] successfully narrowcast event {evt.Id} for customIdentifier {customData.CustomIdentifier}");
+                        _logger.LogInformation($"[SignalR] successfully narrowcast event {evt.Id} for customIdentifier {customIdentifer.GetString()}");
                     }
                     await Task.WhenAll(tasks);
                 }

@@ -1,6 +1,7 @@
 @model EventGridTester.Models.PublishEventViewModel
 @using Azure.Messaging.EventGrid;
-
+@using System.Text.Json;
+@using System.Linq;
 
 @{
     ViewData["Title"] = "Home Page";
@@ -10,31 +11,6 @@
     <h1 class="display-4">Welcome</h1>
 </div>
 
-<div>Graph API result</div>
-<div>@ViewData["GraphApiResult"]</div>
-
-
-<h1>Event History</h1>
-<table id="eventHistory">
-    <tr>
-        <th>Timestamp</th>
-        <th>Event Type</th>
-        <th>Subject</th>
-        <th>Payload</th>
-    </tr>
-
-@foreach (EventGridEvent evt in @ViewBag.EventHistory.ReceivedEvents)
-{
-    <tr id="@evt.Id">
-        <td>@evt.EventTime</td>
-        <td>@evt.EventType</td>
-        <td>@evt.Subject</td>
-        <td>@CustomEventModel.FromEventData(evt.Data)?.ToString()</td>
-    </tr>
-}
-</table>
-
-<hr />
 <h1>Publish Event</h1>
 <form asp-action="SendEvent" method="post"> 
    <div> 
@@ -46,3 +22,16 @@
       <input type = "submit" value = "Publish" /> 
    </div> 
 </form>
+
+<hr />
+
+<h1>Event History</h1>
+<div id="eventHistory">
+@foreach (var evt in (@ViewBag.EventHistory.ReceivedEvents as IEnumerable<EventGridEvent>).OrderByDescending(t => t.EventTime))
+{
+<div>
+    <pre>@Html.Raw(JsonSerializer.Serialize(evt, new JsonSerializerOptions{WriteIndented = true}))</pre> 
+    <hr />
+</div>
+}
+</div>
